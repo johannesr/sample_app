@@ -53,21 +53,35 @@ describe "Authentication" do
       describe "for non-signed-in users" do
         let(:user) { FactoryGirl.create(:user) }
 
-        describe "in the Users controller" do
+        describe "for non-signed-in users" do
+          let(:user) { FactoryGirl.create(:user) }
 
-          describe "visiting the edit page" do
-            before { visit edit_user_path(user) }
-            it { should have_selector('title', text: 'Sign in') }
-          end
+          describe "in the Users controller" do
 
-          describe "submitting to the update action" do
-            before { put user_path(user) }
-            specify { response.should redirect_to(signin_path) }
-          end
+            describe "visiting the edit page" do
+              before { visit edit_user_path(user) }
+              it { should have_selector('title', text: 'Sign in') }
+            end
 
-          describe "visiting the user index" do
-            before { visit users_path }
-            it { should have_selector('title', text: 'Sign in') }
+            describe "submitting to the update action" do
+              before { put user_path(user) }
+              specify { response.should redirect_to(signin_path) }
+            end
+
+            describe "visiting the user index" do
+              before { visit users_path }
+              it { should have_selector('title', text: 'Sign in') }
+            end
+
+            describe "visiting the following page" do
+              before { visit following_user_path(user) }
+              it { should have_selector('title', text: 'Sign in') }
+            end
+
+            describe "visiting the followers page" do
+              before { visit followers_user_path(user) }
+              it { should have_selector('title', text: 'Sign in') }
+            end
           end
         end
       end
@@ -99,7 +113,7 @@ describe "Authentication" do
           fill_in "Password", with: user.password
           click_button "Sign in"
         end
-        
+
         describe "in the Microposts controller" do
 
           describe "submitting to the create action" do
@@ -122,7 +136,7 @@ describe "Authentication" do
             page.should have_selector('title', text: 'Edit user')
           end
         end
-        
+
         describe "as non-admin user" do
           let(:user) { FactoryGirl.create(:user) }
           let(:non_admin) { FactoryGirl.create(:user) }
